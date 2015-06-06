@@ -85,6 +85,39 @@ char* pn_i_genuuid(void) {
     RpcStringFree(&generated);
     return r;
 }
+#elif USE_UUID_WIN_RANDOM
+#include <windows.h>
+char* pn_i_genuuid(void) {
+  uint32_t low, high;
+  char *generated = (char *) malloc(sizeof(uint32_t));
+
+  static bool seeded = false;
+  if (!seeded) {
+    int pid = (int) GetCurrentProcessId();
+    srand(pn_i_now() + pid);
+  }
+
+  low = (uint32_t) rand();
+  high = (uint32_t) rand();
+  sprintf(generated, "%u", ((uint32_t)rand() % (high - low)) + low);
+  return generated;
+}
+#elif USE_UUID_RANDOM
+char* pn_i_genuuid(void) {
+  uint32_t low, high;
+  char *generated = (char *) malloc(sizeof(uint32_t));
+
+  static bool seeded = false;
+  if (!seeded) {
+    int pid = (int) getpid();
+    srand(pn_i_now() + pid);
+  }
+
+  low = (uint32_t) rand();
+  high = (uint32_t) rand();
+  sprintf(generated, "%u", ((uint32_t)rand() % (high - low)) + low);
+  return generated;
+}
 #else
 #error "Don't know how to generate uuid strings on this platform"
 #endif
