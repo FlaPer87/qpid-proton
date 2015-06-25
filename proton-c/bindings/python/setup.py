@@ -275,6 +275,16 @@ class Configure(build_ext):
     def run(self):
         if self.bundle_proton:
             self.bundle_libqpid_proton_extension()
+        else:
+            if sys.platform == 'linux2':
+                _cproton = self.distribution.ext_modules[-1]
+                _cproton.swig_opts.append('-I/usr/include')
+                _cproton.swig_opts.append('-I/usr/local/include')
+
+                _cproton.library_dirs.append('/usr/lib')
+                _cproton.library_dirs.append('/usr/lib64')
+                _cproton.library_dirs.append('/usr/local/lib')
+                _cproton.library_dirs.append('/usr/local/lib64')
 
 
 class CustomBuildOrder(build):
