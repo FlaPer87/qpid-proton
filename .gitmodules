@@ -1,0 +1,4 @@
+[submodule "proton-c/bindings/python"]
+	path = proton-c/bindings/python
+	url = https://github.com/FlaPer87/test-python-qpid-proton.git
+	branch = master
